@@ -1,28 +1,16 @@
+import 'babel-polyfill';
 import express from 'express';
-import React from 'react';
-import { renderToString } from 'react-dom/server';
-import Home from './client/components/Home';
+import renderer from './helpers/renderer';
+import createStore from './helpers/createStore';
 
 const app = express();
 app.use(express.static('public'));
 
-app.get('/', (req, res) => {
-  const content = renderToString(<Home />);
-  console.log(content);
+app.get('*', (req, res) => {
+  // some logic to initialize and load data into the store
+  const store = createStore();
 
-  res.send(`<!DOCTYPE html>
-  <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>SSR React</title>
-  </head>
-  <body>
-      ${content}
-      <script src="bundle.js"></script>
-  </body>
-  </html>`);
+  res.send(renderer(req, store));
 });
 
 app.listen(3000, () => console.log('RUNNING ON PORT 3000'));
