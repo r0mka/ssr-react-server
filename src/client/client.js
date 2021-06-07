@@ -8,6 +8,7 @@ import thunk from 'redux-thunk';
 import { Provider } from 'react-redux';
 import reducers from './reducers';
 import { renderRoutes } from 'react-router-config';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import axios from 'axios';
 
 const axiosInstance = axios.create({
@@ -17,7 +18,9 @@ const axiosInstance = axios.create({
 const store = createStore(
   reducers,
   window.INITIAL_STATE,
-  applyMiddleware(thunk.withExtraArgument(axiosInstance))
+  composeWithDevTools(
+    applyMiddleware(thunk.withExtraArgument(axiosInstance))
+  )
 );
 
 ReactDOM.hydrate(
